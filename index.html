@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>INI - Build Games with FEMI AI</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+            background: #0f0f1a;
+            color: #f0ede6;
+        }
+
+        /* WELCOME PAGE */
+        .welcome-page {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .welcome-container {
+            text-align: center;
+            color: #fff;
+            max-width: 500px;
+        }
+
+        .welcome-container h1 {
+            font-size: 48px;
+            margin: 20px 0 10px;
+            letter-spacing: 2px;
+        }
+
+        .welcome-container p {
+            font-size: 18px;
+            opacity: 0.9;
+            margin-bottom: 40px;
+        }
+
+        .btn-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin: 0 auto;
+            max-width: 300px;
+        }
+
+        button {
+            padding: 14px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: transform 0.2s, opacity 0.2s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            opacity: 0.9;
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: #fff;
+        }
+
+        .btn-secondary {
+            background: #4ecdc4;
+            color: #fff;
+        }
+
+        .btn-danger {
+            background: #ff6b9d;
+            color: #fff;
+        }
+
+        .btn-admin {
+            background: rgba(255,255,255,0.2);
+            color: #fff;
+            border: 1px solid #fff;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* ACCOUNT PAGE */
+        .account-page {
+            min-height: 100vh;
+            background: #f5f7fa;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .account-container {
+            background: #fff;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            max-width: 400px;
+            width: 100%;
+        }
+
+        .account-container h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 24px;
+        }
+
+        /* KIDS DASHBOARD */
+        .kids-page {
+            min-height: 100vh;
+            background: #fff9e6;
+            padding: 20px;
+        }
+
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .dashboard-header h1 {
+            color: #667eea;
+            margin: 0;
+        }
+
+        .card {
+            background: #fff;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+        }
+
+        .card-grid {
+            display: grid;
+            gap: 20px;
+        }
+
+        .stat-box {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .stat {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .quiz-card {
+            background: #fffbea;
+            border: 2px solid #ffd700;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+
+        .quiz-card h3 {
+            color: #d97706;
+            margin: 0 0 10px;
+        }
+
+        .quiz-card p {
+            color: #666;
+            margin-bottom: 15px;
+        }
+
+        /* ADULT DASHBOARD */
+        .adult-page {
+            min-height: 100vh;
+            background: #0f0f1a;
+            color: #fff;
+            padding: 20px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: #1a1a2e;
+            padding: 16px;
+            border-radius: 8px;
+            border: 1px solid #333;
+        }
+
+        .stat-card-value {
+            font-size: 22px;
+            font-weight: bold;
+            color: #667eea;
+            margin-top: 5px;
+        }
+
+        /* BUILDER */
+        .builder-page {
+            min-height: 100vh;
+            background: #f5f7fa;
+            padding: 20px;
+        }
+
+        .builder-container {
+            background: #fff;
+            padding: 30px;
+            border-radius: 12px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .builder-container h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            font-size: 14px;
+            font-family: inherit;
+            margin-bottom: 12px;
+            resize: vertical;
+            box-sizing: border-box;
+        }
+
+        /* ADMIN PANEL */
+        .admin-page {
+            min-height: 100vh;
+            background: #1a1a1a;
+            color: #fff;
+            padding: 20px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .admin-page h1 {
+            color: #ff6b9d;
+            margin-bottom: 20px;
+        }
+
+        .admin-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .admin-stat {
+            background: #2a2a2a;
+            padding: 20px;
+            border-radius: 8px;
+            border: 2px solid #ff6b9d;
+        }
+
+        .admin-stat-label {
+            font-size: 12px;
+            color: #888;
+            margin-bottom: 10px;
+        }
+
+        .admin-stat-value {
+            font-size: 36px;
+            font-weight: bold;
+            color: #ff6b9d;
+        }
+
+        .admin-settings {
+            background: #2a2a2a;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #555;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .form-group label {
+            display: block;
+            color: #888;
+            font-size: 12px;
+            margin-bottom: 4px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid #555;
+            background: #1a1a1a;
+            color: #fff;
+            font-family: inherit;
+            box-sizing: border-box;
+        }
+
+        input[type="text"], input[type="password"], input[type="email"], input[type="number"] {
+            width: 100%;
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #667eea;
+            font-style: italic;
+        }
+
+        @media (max-width: 768px) {
+            .welcome-container h1 {
+                font-size: 36px;
+            }
+            
+            .account-container {
+                padding: 20px;
+            }
+            
+            button {
+                padding: 12px 16px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- WELCOME PAGE -->
+<div id="welcome-page" class="welcome-page">
+    <div class="welcome-container">
+        <div style="font-size: 80px; margin-bottom: 20px;">🎮</div>
+        <h1>INI</h1>
+        <p>Build Games with FEMI AI</p>
+        <div class="btn-group">
+            <button class="btn-danger" onclick="startAsKid()">👶 I'm a Kid</button>
+            <button class="btn-secondary" onclick="startAsAdult()">👨 I'm an Adult</button>
+            <button class="btn-admin" onclick="openAdmin()">🔐 Admin</button>
+        </div>
+        <div style="margin-top: 40px; font-size: 12px; opacity: 0.7;">
+            <p>✨ Create amazing games without coding</p>
+            <p>📚 Educational rewards for kids</p>
+            <p>🤖 Powered by FEMI AI</p>
+        </div>
+    </div>
+</div>
+
+<!-- ACCOUNT PAGE -->
+<div id="account-page" class="account-page hidden">
+    <div class="account-container">
+        <button class="btn-primary" onclick="goToWelcome()" style="width: 100%; margin-bottom: 20px;">← Back</button>
+        <h2>Create Account</h2>
+        <div class="btn-group">
+            <button class="btn-primary" onclick="loginWith('google')">🔵 Google</button>
+            <button class="btn-primary" onclick="loginWith('apple')">🍎 Apple</button>
+            <button class="btn-primary" onclick="loginWith('email')">✉️ Email</button>
+        </div>
+    </div>
+</div>
+
+<!-- KIDS DASHBOARD -->
+<div id="kids-page" class="kids-page hidden">
+    <div class="dashboard-header">
+        <h1 id="kids-greeting" style="font-size: 28px;"></h1>
+        <button class="btn-danger" onclick="logout()">Logout</button>
+    </div>
+    
+    <div class="card">
+        <div class="stat-box">
+            <div class="stat">
+                <div class="stat-label">Weekly Tokens</div>
+                <div class="stat-value">2.0M</div>
+            </div>
+            <div class="stat">
+                <div class="stat-label">Status</div>
+                <div class="stat-value" style="color: #ff6b9d;">📌 Free</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="quiz-card">
+        <h3>📚 Daily Questions</h3>
+        <p>Answer 10 questions correctly to unlock Premium for 24 hours!</p>
+        <button class="btn-danger">📖 Start Quiz</button>
+    </div>
+
+    <div class="card">
+        <h3 style="margin: 0 0 15px;">What would you like to build?</h3>
+        <div class="btn-group">
+            <button class="btn-primary" onclick="goToBuilder('ai')">✨ AI Mode (Recommended)</button>
+            <button class="btn-secondary" onclick="goToBuilder('dragdrop')">🔨 Drag & Drop</button>
+        </div>
+    </div>
+
+    <div style="margin-top: 20px; padding: 12px; background: #f0f0f0; border-radius: 8px; font-size: 12px; color: #666;">
+        🔗 Referral Code: <strong id="referral-code" style="color: #667eea;"></strong>
+    </div>
+</div>
+
+<!-- ADULT DASHBOARD -->
+<div id="adult-page" class="adult-page hidden">
+    <div class="dashboard-header">
+        <h1 style="font-size: 28px;">INI Studio</h1>
+        <button class="btn-primary" onclick="logout()">Logout</button>
+    </div>
+
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-label">Weekly Tokens</div>
+            <div class="stat-card-value">2.0M</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Plan</div>
+            <div class="stat-card-value" style="color: #ff6b9d;">Free</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Games</div>
+            <div class="stat-card-value" style="color: #4ecdc4;">0</div>
+        </div>
+    </div>
+
+    <h2 style="margin-top: 20px; color: #a78bfa;">Create New Game</h2>
+    <div class="btn-group" style="max-width: 100%;">
+        <button class="btn-primary" onclick="goToBuilder('ai')">✨ AI Mode</button>
+        <button class="btn-secondary" onclick="goToBuilder('dragdrop')">🔨 Drag & Drop</button>
+    </div>
+
+    <h2 style="color: #a78bfa; margin-top: 30px;">Your Games</h2>
+    <div style="text-align: center; color: #666; padding: 40px; background: #1a1a2e; border-radius: 8px;">
+        No games yet. Create one!
+    </div>
+</div>
+
+<!-- BUILDER PAGE -->
+<div id="builder-page" class="builder-page hidden">
+    <button class="btn-primary" onclick="goToDashboard()" style="margin-bottom: 20px;">← Back</button>
+    
+    <div class="builder-container">
+        <h2 id="builder-title">✨ Create with FEMI AI</h2>
+        <p id="builder-desc">Describe your game and FEMI will build it for you!</p>
+        
+        <textarea id="ai-prompt" placeholder="E.g., 'A space adventure where you collect stars and avoid asteroids'" rows="4"></textarea>
+        
+        <button class="btn-primary" onclick="generateGame()" style="width: 100%;">
+            Generate Game with FEMI
+        </button>
+
+        <div style="margin-top: 20px; padding: 12px; background: #f0f0f0; border-radius: 8px; font-size: 12px; color: #666;">
+            💡 <strong>Tip:</strong> Be specific about game mechanics, characters, and goals for best results!
+        </div>
+    </div>
+</div>
+
+<!-- ADMIN PANEL -->
+<div id="admin-page" class="admin-page hidden">
+    <h1>🔐 ADMIN PANEL</h1>
+    <button class="btn-primary" onclick="goToWelcome()" style="margin-bottom: 20px;">Logout</button>
+
+    <div class="admin-stats">
+        <div class="admin-stat">
+            <div class="admin-stat-label">Total Users</div>
+            <div class="admin-stat-value">0</div>
+        </div>
+        <div class="admin-stat" style="border-color: #4ecdc4;">
+            <div class="admin-stat-label">Total Games</div>
+            <div class="admin-stat-value" style="color: #4ecdc4;">0</div>
+        </div>
+        <div class="admin-stat" style="border-color: #fbbf24;">
+            <div class="admin-stat-label">Revenue</div>
+            <div class="admin-stat-value" style="color: #fbbf24;">$0</div>
+        </div>
+    </div>
+
+    <div class="admin-settings">
+        <h2 style="margin-top: 0; color: #667eea;">Settings</h2>
+        <div class="form-group">
+            <label>Export Fee ($)</label>
+            <input type="number" value="2">
+        </div>
+        <div class="form-group">
+            <label>Weekly Token Limit</label>
+            <input type="number" value="2000000">
+        </div>
+        <button class="btn-primary" style="width: 100%; margin-top: 12px;">Save Changes</button>
+    </div>
+
+    <div style="margin-top: 20px; padding: 12px; background: #1a1a1a; border-radius: 6px; border: 1px solid #444; font-size: 11px; color: #888;">
+        Admin password protected. Only accessible with correct credentials.
+    </div>
+</div>
+
+<script>
+let currentUser = null;
+let currentAgeGroup = null;
+
+function showPage(pageId) {
+    document.querySelectorAll('[class*="-page"]').forEach(page => {
+        page.classList.add('hidden');
+    });
+    document.getElementById(pageId).classList.remove('hidden');
+}
+
+function startAsKid() {
+    currentAgeGroup = 'kid';
+    showPage('account-page');
+}
+
+function startAsAdult() {
+    currentAgeGroup = 'adult';
+    showPage('account-page');
+}
+
+function openAdmin() {
+    const pwd = prompt('Admin Password:');
+    if (pwd === 'INIROCKS100%') {
+        showPage('admin-page');
+    } else {
+        alert('❌ Wrong password');
+    }
+}
+
+function loginWith(method) {
+    const email = method === 'email' ? prompt('Enter email:') : `user+${method}@ini.app`;
+    if (!email && method === 'email') return;
+    
+    currentUser = { email, method, ageGroup: currentAgeGroup };
+    
+    if (currentAgeGroup === 'kid') {
+        document.getElementById('kids-greeting').textContent = `👋 Hi ${email.split('@')[0]}!`;
+        document.getElementById('referral-code').textContent = `INI-${Math.random().toString(36).slice(2, 8).toUpperCase()}`;
+        showPage('kids-page');
+    } else {
+        showPage('adult-page');
+    }
+}
+
+function goToBuilder(mode) {
+    const title = mode === 'ai' ? '✨ Create with FEMI AI' : '🔨 Drag & Drop Builder';
+    const desc = mode === 'ai' ? 'Describe your game and FEMI will build it for you!' : 'Drag elements to build your game level';
+    
+    document.getElementById('builder-title').textContent = title;
+    document.getElementById('builder-desc').textContent = desc;
+    showPage('builder-page');
+}
+
+function goToDashboard() {
+    showPage(currentAgeGroup === 'kid' ? 'kids-page' : 'adult-page');
+}
+
+function goToWelcome() {
+    currentUser = null;
+    currentAgeGroup = null;
+    showPage('welcome-page');
+}
+
+function logout() {
+    currentUser = null;
+    currentAgeGroup = null;
+    showPage('welcome-page');
+}
+
+async function generateGame() {
+    const prompt = document.getElementById('ai-prompt').value;
+    if (!prompt.trim()) {
+        alert('Please describe your game!');
+        return;
+    }
+    
+    alert('✅ Game created! (This is a demo - full FEMI AI integration requires backend)');
+    goToDashboard();
+}
+
+// Initialize
+document.getElementById('referral-code').textContent = `INI-${Math.random().toString(36).slice(2, 8).toUpperCase()}`;
+</script>
+
+</body>
+</html>
